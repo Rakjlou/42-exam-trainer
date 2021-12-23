@@ -6,7 +6,7 @@ A quick and easy program to train 42 exams.
 Only exam 02 is supported for now.
 Currently WIP.
 ## Install
-- Dependencies:  `gcc`, `valgrind` and `ts`
+- Dependencies:  `gcc` and `valgrind`
 - Setup: just clone the repository where you want
 ## Usage
 ```bash
