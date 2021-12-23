@@ -1,6 +1,3 @@
-
-  
-
 # 42-exam-trainer
 A quick and easy program to train 42 exams.
 Only exam 02 is supported for now.
@@ -30,6 +27,7 @@ Now don't say `LET'S GO !!` to anyone, and you should be good.
 
 ### Upcoming features
 - Finally determining `bash`'s minimum required version 
+- Allowing to test a specific test
 - Adding level 1 tests (`inter` and `union`)
 - Adding tests subjects
 - Exam mode, where only one test is chosen by level
@@ -43,7 +41,7 @@ Now don't say `LET'S GO !!` to anyone, and you should be good.
 Do it !
 
 ## Screenshots
-![nice screenshot of the program running smoothly](https://i.ibb.co/37cpDMt/image.png)![fantastic sceenshot of the program being nice](https://i.ibb.co/yWG5ybt/image.png)
+![nice screenshot of the program running smoothly](https://i.ibb.co/PrnggNK/image.png)![fantastic sceenshot of the program being nice](https://i.ibb.co/yWG5ybt/image.png)
 
 ## LICENSE
 ```
