@@ -12,7 +12,7 @@ test_ft_printf()
 
 		if [ $leaks_check -gt 0 ]
 		then
-			rm -f test.ref.out a.out.mine a.out.ref test.mine.out test.mine.valgrind test.diff
+			./clean.sh
 			return 0
 		else
 			cat "test.mine.valgrind"
