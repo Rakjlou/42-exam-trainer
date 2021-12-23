@@ -32,7 +32,6 @@ Now don't say `LET'S GO !!` to anyone, and you should be good.
 - Adding level 1 tests (`inter` and `union`)
 - Adding tests subjects
 - Exam mode, where only one test is chosen by level
-- Allowing to skip a test
 - Allowing to chose only one test to pass
 - History
 - Keeping high time score records
