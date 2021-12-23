@@ -31,6 +31,7 @@ This program is currently a work in progress. A few features are on the way.
 - Allowing to skip a test
 - Allowing to chose only one test to pass
 - History
+- Keeping high time score records
 
 If you're interested int contributing, feel free to do it !
 
