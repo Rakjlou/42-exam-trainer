@@ -25,6 +25,7 @@ Now don't say `LET'S GO !!` to anyone, and you're good :)
 ## IMPORTANT
 This program is currently a work in progress. A few features are on the way.
 - Adding level 1 tests (`inter` and `union`)
+- Adding tests subjects
 - Exam mode, where only one test is chosen by level
 - Allowing to skip a test
 - Allowing to chose only one test to pass
