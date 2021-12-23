@@ -37,8 +37,8 @@ exam_print_status()
 {
 	total_time_elapsed=$(($1 - $2));
 	test_time_elapsed=$(($1 - $3));
-	exam_print_elapsed_time "total time " $total_time_elapsed
-	exam_print_elapsed_time "test time  " $test_time_elapsed
+	exam_print_elapsed_time "total time  " $total_time_elapsed
+	exam_print_elapsed_time "test time   " $test_time_elapsed
 	echo
 }
 
