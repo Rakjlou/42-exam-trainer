@@ -165,7 +165,13 @@ exam_start()
 					elif [ $answer = "y" ]  || [ $answer = "Y" ]
 					then
 						echo "$(tput setaf 244)testing $test_name (it may take a while)...$(tput sgr 0)"
-						test_exo $test_name && break
+						if test_exo $test_name
+						then
+							total_time_elapsed=$(($(date +"%s") - $test_start_timestamp));
+							exam_print_elapsed_time "finished in " $total_time_elapsed
+							echo
+							break
+						fi
 					else
 						continue
 					fi
