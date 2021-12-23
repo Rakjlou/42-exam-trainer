@@ -17,18 +17,19 @@ exam_print_elapsed_time()
 
 exam_print_current_test()
 {
-	echo "$(tput setaf 244)level:$(tput sgr 0)  $1"
-	echo "$(tput setaf 244)test:$(tput sgr 0)   $2"
-	echo "$(tput setaf 244)folder:$(tput sgr 0) work/$2"
+	echo "$(tput setaf 244)level:$(tput sgr 0)      $1"
+	echo "$(tput setaf 244)test:$(tput sgr 0)       $2"
+	echo "$(tput setaf 244)folder:$(tput sgr 0)     work/$2"
 }
 
 exam_print_help()
 {
-	echo "grademe or g    $(tput setaf 244)run tests and maybe try to be worthwile$(tput sgr 0)"
-	echo "status or s     $(tput setaf 244)leaves the exam$(tput sgr 0)"
-	echo "quit or q       $(tput setaf 244)leaves the exam$(tput sgr 0)"
-	echo "help or h       $(tput setaf 244)duh$(tput sgr 0)"
-	exam_enter_to_continue
+	echo "commands:"
+	echo "    $(tput setaf 244)grademe, g$(tput sgr 0) run tests and maybe try to be worthwile"
+	echo "    $(tput setaf 244)status, s$(tput sgr 0)  display elapsed time"
+	echo "    $(tput setaf 244)quit, q$(tput sgr 0)    leaves the exam"
+	echo "    $(tput setaf 244)help, h$(tput sgr 0)    duh"
+	echo
 }
 
 exam_print_status()
@@ -37,7 +38,7 @@ exam_print_status()
 	test_time_elapsed=$(($1 - $3));
 	exam_print_elapsed_time "total time " $total_time_elapsed
 	exam_print_elapsed_time "test time  " $test_time_elapsed
-	exam_enter_to_continue
+	echo
 }
 
 exam_confirm()
@@ -134,12 +135,11 @@ exam_start()
 			local test_name=${exam_tests[i]};
 			local test_start_timestamp=$(date +"%s");
 
+			exam_print_current_test $level $test_name
+			echo
 			while [ 42 -eq 42 ]
 			do
-				exam_print_current_test $level $test_name
-				echo
-				read -p ">>> " user_cmd
-
+				read -p "$(tput setaf 244)exam-trainer$(tput sgr 0)> " user_cmd
 				if [ -z $user_cmd ]
 				then
 					continue
@@ -151,7 +151,9 @@ exam_start()
 					exam_print_help
 				elif [ $user_cmd = "status" ]  ||  [ $user_cmd = "s" ]
 				then
-					exam_print_status $(date +"%s") $start_timestamp $test_start_timestamp
+					echo "status:"
+					exam_print_current_test $level $test_name | sed -e "s/.*/    &/"
+					exam_print_status $(date +"%s") $start_timestamp $test_start_timestamp  | sed -e "s/.*/    &/"
 				elif [ $user_cmd = "grademe" ]  ||  [ $user_cmd = "g" ]
 				then
 					read -p "Are you sure you want to be graded ? [yN]" answer
@@ -167,6 +169,9 @@ exam_start()
 					else
 						continue
 					fi
+				else
+					echo "Unknown command"
+					echo "Type help if you're lost"
 				fi
 			done
 		done

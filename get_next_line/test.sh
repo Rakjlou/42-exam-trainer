@@ -15,7 +15,7 @@ test_get_next_line()
 
 		if [ $leaks_check -gt 0 ]
 		then
-			rm -f "$2.$1.test" "$2.$1.valgrind" "$2.$1.diff"
+			rm -f "$2.$1.test" "$2.$1.valgrind" "$2.$1.diff" ./test
 			return 0
 		else
 			print_test_summary $1 $2
