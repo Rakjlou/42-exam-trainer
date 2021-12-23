@@ -19,7 +19,7 @@ exam_print_current_test()
 {
 	echo "$(tput setaf 244)level:$(tput sgr 0)  $1"
 	echo "$(tput setaf 244)test:$(tput sgr 0)   $2"
-	echo "$(tput setaf 244)folder:$(tput sgr 0) rendu/$2"
+	echo "$(tput setaf 244)folder:$(tput sgr 0) work/$2"
 }
 
 exam_print_help()
@@ -42,7 +42,7 @@ exam_print_status()
 
 exam_confirm()
 {
-	echo "$(tput setaf 3)rendu/ will be reset$(tput sgr 0)"
+	echo "$(tput setaf 3)work/ will be reset$(tput sgr 0)"
 	read -p "Are you ready to start ? [yN]" response
 	echo
 
@@ -59,10 +59,10 @@ exam_confirm()
 
 exam_setup()
 {
-	rm -rf rendu/ *.trace && \
-	echo "$(tput setaf 244)rm -rf rendu/ *.trace$(tput sgr 0)" && \
-	mkdir rendu && \
-	echo "$(tput setaf 244)mkdir rendu$(tput sgr 0)" && \
+	rm -rf work/ *.trace && \
+	echo "$(tput setaf 244)rm -rf work/ *.trace$(tput sgr 0)" && \
+	mkdir work && \
+	echo "$(tput setaf 244)mkdir work$(tput sgr 0)" && \
 	local all_tests=()
 	all_tests+=(${TESTS_0[@]})
 	all_tests+=(${TESTS_1[@]})
@@ -103,7 +103,7 @@ exam_start()
 	echo "You're all set !"
 	echo "The exam will start after all this... hopefully"
 	echo "$(tput smul)Remember:$(tput rmul)"
-	echo "    $(tput setaf 2)rendu/$(tput sgr 0)"
+	echo "    $(tput setaf 2)work/$(tput sgr 0)"
 	echo "        you put your files there"
 	echo "    $(tput setaf 2)grademe$(tput sgr 0)"
 	echo "        is just pure adrenaline rush"
