@@ -18,6 +18,7 @@ Now don't say `LET'S GO !!` to anyone, and you should be good.
 - Freely inspired by `examshell`
 	- `grademe` runs tests
 	- `status` prints the time spent overall and on the current test
+	- `skip` ignores current test
 	- `help` prints all available commands
 	- `quit` quits the exam
 - Extensive error details (compilation errors, runtime, diffs, leaks)
@@ -32,7 +33,6 @@ Now don't say `LET'S GO !!` to anyone, and you should be good.
 - Adding level 1 tests (`inter` and `union`)
 - Adding tests subjects
 - Exam mode, where only one test is chosen by level
-- Allowing to skip a test
 - Allowing to chose only one test to pass
 - History
 - Keeping high time score records
