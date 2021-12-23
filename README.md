@@ -32,6 +32,7 @@ This program is currently a work in progress.
 ### Upcoming features
 - Finally determining `bash`'s minimum required version 
 - Adding level 1 tests (`inter` and `union`)
+- Detecting timeout
 - Adding tests subjects
 - Exam mode, where only one test is chosen by level
 - Allowing to skip a test
