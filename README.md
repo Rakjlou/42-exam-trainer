@@ -21,7 +21,7 @@ Now don't say `LET'S GO !!` to anyone, and you should be good.
 	- `help` prints all available commands
 	- `quit` quits the exam
 - Simple tests, just like during the exams
-- Easily recompile and rerun tests outside from the trainer
+- Easily recompile and rerun tests outside the trainer
 - Extensive error details (compilation errors, runtime, diffs, leaks)
 - Checking leaks
 - Easy to tweak
