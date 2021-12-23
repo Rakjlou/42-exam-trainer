@@ -1,6 +1,7 @@
 
 # 42-exam-trainer
-A quick and easy program to train 42 exams. 
+A quick and easy program to train 42 exams.
+Only exam 02 is supported for now.
 
 ## Usage
 Copy this repo via `git clone` or anything else. Then enter the trainer directory, and simply:
