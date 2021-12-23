@@ -4,7 +4,7 @@
 A quick and easy program to train 42 exams.
 Only exam 02 is supported for now.
 ## Install
-This program uses `gcc` and `valgrind`, be sure  you got that covered.
+This program uses `gcc` and `valgrind`, and has been written under `bash 5` (but earlier versions should work I guess ?), be sure  you got that covered.
 Besides that, just clone the repository where you want.
 
 
@@ -30,6 +30,7 @@ Now don't say `LET'S GO !!` to anyone, and you should be good.
 ## IMPORTANT
 This program is currently a work in progress.
 ### Upcoming features
+- Finally determining `bash`'s minimum required version 
 - Adding level 1 tests (`inter` and `union`)
 - Adding tests subjects
 - Exam mode, where only one test is chosen by level
