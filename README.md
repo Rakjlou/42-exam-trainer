@@ -1,14 +1,18 @@
 
+
 # 42-exam-trainer
 A quick and easy program to train 42 exams.
 Only exam 02 is supported for now.
+## Install
+This program uses `gcc` and `valgrind`, be sure  you got that covered.
+Besides that, just clone the repository where you want.
+
 
 ## Usage
-Copy this repo via `git clone` or anything else. Then enter the trainer directory, and simply:
 ```bash
 ./exam-trainer.sh
 ```
-Now don't say `LET'S GO !!` to anyone, and you're good :)
+Now don't say `LET'S GO !!` to anyone, and you should be good.
 
 ## Features
 - Interactive, just like `examshell` (more or less)
@@ -21,10 +25,11 @@ Now don't say `LET'S GO !!` to anyone, and you're good :)
 - Extensive error details (compilation errors, runtime, diffs, leaks)
 - Checking leaks
 - Easy to tweak
-- Great humor
+- Passive aggressive humor
 
 ## IMPORTANT
-This program is currently a work in progress. A few features are on the way.
+This program is currently a work in progress.
+### Upcoming features
 - Adding level 1 tests (`inter` and `union`)
 - Adding tests subjects
 - Exam mode, where only one test is chosen by level
@@ -33,7 +38,20 @@ This program is currently a work in progress. A few features are on the way.
 - History
 - Keeping high time score records
 
-If you're interested int contributing, feel free to do it !
+### Contributing
+Do it !
+
+### Licence
+```
+/*
+ * ----------------------------------------------------------------------------
+ * "THE SANDWICH-WARE LICENSE" (Revision 42):
+ * <nsierra-@student.42.fr> wrote this file. As long as you retain this notice you
+ * can do whatever you want with this stuff. If we meet some day, and you think
+ * this stuff is worth it, you can buy me a sandwich in return. Rakjlou
+ * ----------------------------------------------------------------------------
+ */
+```
 
 ## Screenshots
 ![enter image description here](https://lh3.googleusercontent.com/s9fnPxoCaH_p9EoBFXgjBdduMSAea_H6e9ESLBJCeM0g8gQ7ZO9CInoHwUC-qcoipaVCGRH1FaZdWTIT0D68GqNznn626LsznrsM_OGN4jBWtC3kYQHmbQE5q8SxELSHOpVj5qQMfsFgzAP9uo0oSA0s2iRvldxnQ0K_XuqWta2v56eecxkRirITGR5uALJtOUVRPhBE7n0v6ngoyQCMvq7cWrleDezbd17qQAxoPGieM_sIjCbgO0xJBdpP4pzvlQCkjPS40e1i_YRjZrfKXpM1Fu1p6Xv1EyLD4DVfZO2hwemWwayShZK4huIs2FqHnui-AhrxZVTkA2G-f7lFQvLZjaL7RKzISD8k3g3WitBDCO5Ga1N2USUleJLEqnFdkeMSa8u9dUiFNMBIq6ol_140MEl-9mR2d3od-TlwVdPtsk4zW_jB-VfsQ5r3eOAQzWwGWSAUiYnDqVRtDQLlxMaZyUY2Yoyfxd1Nmqz_J4Lagl7hqIPkVr9YgLV4BQbJ0n50d7AT1FarS_pzMZpKw3t9EMoS_2ydGzLcIYNj8xOPhFiJ9InyFoC5FI8H7Q_HEyS_5DhGfJTNMbAuA2dEcVKXDvFDOV-1ZJTCRDYYG-XOLGLJtPbo1tuUT9lVJkMFfTmSzHGMFUq_UYb_LUBTpEFd_9M76XDtjsNdWj8spAJdxRaCPYU4w8wcGwBdUSiL4l8GT-v2xg9bmrlRfZa1iTI=w615-h437-no?authuser=0)
