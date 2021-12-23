@@ -27,6 +27,7 @@ exam_print_help()
 	echo "commands:"
 	echo "    $(tput setaf 244)grademe, g$(tput sgr 0) run tests and maybe try to be worthwile"
 	echo "    $(tput setaf 244)status, s$(tput sgr 0)  display elapsed time"
+	echo "    $(tput setaf 244)skip, sk$(tput sgr 0)   skips to next test"
 	echo "    $(tput setaf 244)quit, q$(tput sgr 0)    leaves the exam"
 	echo "    $(tput setaf 244)help, h$(tput sgr 0)    duh"
 	echo
@@ -85,12 +86,10 @@ test_exo()
 	then
 		cd - >/dev/null
 		echo "$(tput setaf 2)>>>>>SUCCESS<<<<<$(tput sgr 0)"
-		echo
 		return 0
 	else
 		cd - >/dev/null
 		echo "$(tput setaf 1)>>>>>FAILURE<<<<<$(tput sgr 0)"
-		echo
 		return 1
 	fi
 }
@@ -146,6 +145,17 @@ exam_start()
 				elif [ $user_cmd = "quit" ] ||  [ $user_cmd = "q" ]
 				then
 					return 1
+				elif [ $user_cmd = "skip" ]  ||  [ $user_cmd = "sk" ]
+				then
+					read -p "Are you sure you want to skip $test_name ? [yN]" answer
+
+					if [ -z $answer ] || [ $answer = "n" ] || [ $answer = "N" ]
+					then
+						continue
+					elif [ $answer = "y" ] || [ $answer = "Y" ]
+					then
+						break
+					fi
 				elif [ $user_cmd = "help" ]  ||  [ $user_cmd = "h" ]
 				then
 					exam_print_help
@@ -169,7 +179,6 @@ exam_start()
 						then
 							total_time_elapsed=$(($(date +"%s") - $test_start_timestamp));
 							exam_print_elapsed_time "finished in " $total_time_elapsed
-							echo
 							break
 						fi
 					else
@@ -182,7 +191,8 @@ exam_start()
 			done
 		done
 	done
-
+	total_time_elapsed=$(($(date +"%s") - $start_timestamp));
+	exam_print_elapsed_time "total time " $total_time_elapsed
 }
 
 exam()

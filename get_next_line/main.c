@@ -11,7 +11,7 @@ int     main()
 		line = get_next_line(STDIN_FILENO);
 		if (line == NULL)
 				break ;
-		printf("%s", line);
+		printf(">>>%s", line);
 		free(line);
 	}
 	return (0);

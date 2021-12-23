@@ -8,7 +8,8 @@ test_get_next_line()
 {
 	./compile.sh $1 || return 1
 	valgrind ./test < $2 > "$2.$1.test" 2> "$2.$1.valgrind"
-	diff $2 "$2.$1.test" > "$2.$1.diff"
+	cat $2 | sed -e "s/.*/>>>&/" > "$2.$1.ref"
+	diff "$2.$1.ref" "$2.$1.test" > "$2.$1.diff"
 	if	[ $? -eq 0 ]
 	then
 		leaks_check=$(cat "$2.$1.valgrind" | grep "no leaks are possible" | wc -l)
