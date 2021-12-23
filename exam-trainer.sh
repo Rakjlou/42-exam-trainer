@@ -1,5 +1,5 @@
 #!/bin/bash
-VERSION="0.0";
+VERSION="0.5";
 TESTS_0=()
 TESTS_1=("get_next_line" "ft_printf")
 
