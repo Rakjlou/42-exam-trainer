@@ -17,9 +17,9 @@ exam_print_elapsed_time()
 
 exam_print_current_test()
 {
-	echo "$(tput setaf 244)level:$(tput sgr 0)      $1"
-	echo "$(tput setaf 244)test:$(tput sgr 0)       $2"
-	echo "$(tput setaf 244)folder:$(tput sgr 0)     work/$2"
+	echo "$(tput setaf 244)level:$(tput sgr 0)       $1"
+	echo "$(tput setaf 244)test:$(tput sgr 0)        $2"
+	echo "$(tput setaf 244)folder:$(tput sgr 0)      work/$2"
 }
 
 exam_print_help()
@@ -71,7 +71,7 @@ exam_setup()
 	for test in ${all_tests[@]}
 	do
 		cd $test
-		./clean.sh
+		bash clean.sh
 		cd - >/dev/null
 		echo "$(tput setaf 244)$test/clean.sh$(tput sgr 0)"
 	done
@@ -81,7 +81,7 @@ exam_setup()
 test_exo()
 {
 	cd $1 >/dev/null
-	./test.sh
+	bash test.sh
 	if	[ $? -eq 0 ]
 	then
 		cd - >/dev/null
@@ -192,7 +192,7 @@ exam_start()
 		done
 	done
 	total_time_elapsed=$(($(date +"%s") - $start_timestamp));
-	exam_print_elapsed_time "total time " $total_time_elapsed
+	exam_print_elapsed_time "total time  " $total_time_elapsed
 }
 
 exam()

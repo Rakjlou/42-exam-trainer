@@ -6,8 +6,8 @@ print_test_summary()
 
 test_get_next_line()
 {
-	./compile.sh $1 || return 1
-	valgrind ./test < $2 > "$2.$1.test" 2> "$2.$1.valgrind"
+	bash compile.sh $1 || return 1
+	valgrind ./a.out < $2 > "$2.$1.test" 2> "$2.$1.valgrind"
 	cat $2 | sed -e "s/.*/>>>&/" > "$2.$1.ref"
 	diff "$2.$1.ref" "$2.$1.test" > "$2.$1.diff"
 	if	[ $? -eq 0 ]
@@ -16,7 +16,7 @@ test_get_next_line()
 
 		if [ $leaks_check -gt 0 ]
 		then
-			./clean.sh
+			bash clean.sh
 			return 0
 		else
 			print_test_summary $1 $2
