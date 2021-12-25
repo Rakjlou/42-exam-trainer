@@ -1,212 +1,492 @@
 #!/bin/bash
-VERSION="0.5";
-TESTS_0=()
-TESTS_1=("get_next_line" "ft_printf")
 
-exam_enter_to_continue()
+##
+# Globals
+##
+_version="0.6"
+_program="Exam Trainer"
+_author="rakjlou"
+
+_tests=("inter" "union" "ft_printf" "get_next_line")
+_exams=("exam02")
+_modes=("all tests" "exam")
+
+_exam="exam02"
+_mode="all tests"
+_user_dirname="work/"
+
+_force_quit=0
+
+_start=0
+_level=0
+
+_test=""
+_test_success=0
+_test_start=0
+
+_tests_passed=()
+_tests_passed_elapsed=()
+
+_ifs=$IFS
+
+##
+# Utils
+##
+
+enter_to_continue()
 {
-	read -sp "Press ENTER to continue..."
-	echo
-	echo
+	read -esp "(press ENTER to continue...)"
+	eprint
 }
 
-exam_print_elapsed_time()
+##
+# Configuration
+##
+configure_exam()
 {
-	echo "$(tput setaf 244)$1$(tput sgr 0) $(( ${2} / 3600 ))h $(( (${2} / 60) % 60 ))m $(( ${2} % 60 ))s"
-}
+	eprint "Select the exam you want to train for:"
+	eprint_indent++
 
-exam_print_current_test()
-{
-	echo "$(tput setaf 244)level:$(tput sgr 0)       $1"
-	echo "$(tput setaf 244)test:$(tput sgr 0)        $2"
-	echo "$(tput setaf 244)folder:$(tput sgr 0)      work/$2"
-}
+	for i in ${!_exams[@]}
+	do
+		local current=${_exams[$i]}
 
-exam_print_help()
-{
-	echo "commands:"
-	echo "    $(tput setaf 244)grademe, g$(tput sgr 0) run tests and maybe try to be worthwile"
-	echo "    $(tput setaf 244)status, s$(tput sgr 0)  display elapsed time"
-	echo "    $(tput setaf 244)skip, sk$(tput sgr 0)   skips to next test"
-	echo "    $(tput setaf 244)quit, q$(tput sgr 0)    leaves the exam"
-	echo "    $(tput setaf 244)help, h$(tput sgr 0)    duh"
-	echo
-}
+		case $current
+		in
+			$_exam) eprint "$(tput setaf 1)*$(tput sgr 0)$(tput setaf 244)$i$(tput sgr 0) $current" ;;
+			*) eprint "$(tput setaf 244)$i $(tput sgr 0) $current" ;;
+		esac
+	done
 
-exam_print_status()
-{
-	total_time_elapsed=$(($1 - $2));
-	test_time_elapsed=$(($1 - $3));
-	exam_print_elapsed_time "total time  " $total_time_elapsed
-	exam_print_elapsed_time "test time   " $test_time_elapsed
-	echo
-}
+	eprint_indent--
+	eprint
+	read -ep "Pick a number (just type enter to ignore): " response
 
-exam_confirm()
-{
-	echo "$(tput setaf 3)work/ will be reset$(tput sgr 0)"
-	read -p "Are you ready to start ? [yN]" response
-	echo
-
-	if [ -z $response ] || [ $response = "n" ] || [ $response = "N" ]
+	if [ ! -z $response ]
 	then
-		return 1
-	elif [ $response = "y" ] || [ $response = "Y" ]
-	then
-		return 0
-	else
-		exam_confirm
+		local found=0
+
+		for i in ${!_exams[@]}
+		do
+			if [ $i -eq $response ]
+			then
+				found=1
+				_exam=${_exams[$i]}
+			fi
+		done
+		if [ $found -eq 0 ]; then configure_exam; fi
 	fi
+	eprint_tput 244 "$_exam selected"
+	eprint
 }
 
-exam_setup()
+configure_mode()
 {
-	rm -rf work/ *.trace && \
-	echo "$(tput setaf 244)rm -rf work/ *.trace$(tput sgr 0)" && \
-	mkdir work && \
-	echo "$(tput setaf 244)mkdir work$(tput sgr 0)" && \
-	local all_tests=()
-	all_tests+=(${TESTS_0[@]})
-	all_tests+=(${TESTS_1[@]})
-	for test in ${all_tests[@]}
+	eprint "Select the trainer's mode:"
+	eprint_indent++
+
+	for i in ${!_modes[@]}
+	do
+		local current=${_modes[$i]}
+		local number_select=""
+		local description=""
+
+		case $current
+		in
+			$_mode) number_select="$(tput setaf 1)*$(tput sgr 0)$(tput setaf 244)$i$(tput sgr 0)" ;;
+			*) number_select="$(tput setaf 244)$i $(tput sgr 0)" ;;
+		esac
+
+		case $current
+		in
+			"all tests") description="all tests for all levels";;
+			"exam") description="only one test by level";;
+		esac
+
+		eprint "$number_select $current $(tput setaf 244)$description$(tput sgr 0)"
+	done
+
+	eprint_indent--
+	eprint
+	read -ep "Pick a number (just type enter to ignore): " response
+
+	if [ ! -z $response ]
+	then
+		local found=0
+
+		for i in ${!_modes[@]}
+		do
+			if [ $i -eq $response ]
+			then
+				found=1
+				_mode=${_modes[$i]}
+			fi
+		done
+		if [ $found -eq 0 ]; then configure_mode; fi
+	fi
+	eprint_tput 244 "$_mode selected"
+	eprint
+}
+
+configure()
+{
+	configure_exam
+	configure_mode
+}
+
+##
+# Setting up
+##
+confirm()
+{
+	eprint "Config for current training:"
+	eprint_1 "$(tput setaf 244)exam: $(tput sgr 0)$_exam"
+	eprint_1 "$(tput setaf 244)mode: $(tput sgr 0)$_mode"
+	eprint_tput 3 "$_user_dirname will be reset"
+	read -ep "Are you ready to start ? (configure, yes, $(tput smul)no$(tput rmul)) [cyN]" response
+	eprint
+
+	case $response
+	in
+		""|"n"|"N"|"no"|"No") return 1 ;;
+		"y"|"Y"|"yes"|"Yes") return 0 ;;
+		"c"|"C"|"configure"|"Configure")
+			eprint
+			configure
+			confirm
+		;;
+		*) confirm ;;
+	esac
+}
+
+setup()
+{
+	eprint_grey "resetting $_user_dirname..."
+	rm -rf $_user_dirname
+	mkdir $_user_dirname
+
+	for test in ${_tests[@]}
 	do
 		cd $test
 		bash clean.sh
 		cd - >/dev/null
-		echo "$(tput setaf 244)$test/clean.sh$(tput sgr 0)"
+		eprint_grey "$test/clean.sh"
 	done
-	echo
+	eprint
 }
 
-test_exo()
+##
+# Printing
+##
+_indent_level=0
+
+eprint_test()
 {
-	cd $1 >/dev/null
-	bash test.sh
-	if	[ $? -eq 0 ]
+	eprint_kv "level" "$_level" "test" "$_test" "folder" "work/$_test"
+}
+
+eprint_indent()
+{
+	local limit=$((${_indent_level} * 4))
+
+	if [ $limit -lt 1 ]; then return; fi
+
+	for i in $(seq 1 $limit); do echo -n " "; done;
+}
+
+eprint_indent++()
+{
+	_indent_level=$(( $_indent_level + 1 ))
+}
+
+eprint_indent--()
+{
+	_indent_level=$(( $_indent_level - 1 ))
+}
+
+eprint_indent_set()
+{
+	_indent_level=$1
+}
+
+eprint_tput()
+{
+	eprint "$(tput setaf $1)$2$(tput sgr 0)"
+}
+
+eprint_grey()
+{
+	eprint_tput 244 $1
+}
+
+eprint_kv()
+{
+	local maxlen=0
+	local args=("$@")
+
+	for i in ${!args[@]}
+	do
+		if [ $(( $i % 2 )) -eq 1 ]; then continue; fi
+
+		local arg=${args[$i]}
+		local len=${#args[$i]}
+
+		if [ $len -gt $maxlen ]; then maxlen=$len; fi
+	done
+
+	local key=""
+	local value=""
+	local padding=0
+
+	for i in ${!args[@]}
+	do
+		if [ $(( $i % 2 )) -eq 1 ]
+		then
+			value=${args[$i]}
+			padding=$(( ((($maxlen - ${#key}) + 1) * 1) ))
+
+			eprint_indent
+			echo -n "$(tput setaf 244)$key:$(tput sgr 0)"
+			for j in $(seq 1 $padding); do echo -n " "; done;
+			echo "$value"
+
+		else
+			key=${args[i]}
+		fi
+	done
+
+}
+
+eprint()
+{
+	eprint_indent
+	IFS=$''
+	echo $1
+	IFS=$_ifs
+}
+
+eprint_1()
+{
+	eprint_indent++
+	eprint_indent
+	eprint_indent--
+	IFS=$''
+	echo $1
+	IFS=$_ifs
+}
+
+eprint_2()
+{
+	eprint_indent++
+	eprint_indent++
+	eprint_indent
+	eprint_indent--
+	eprint_indent--
+	IFS=$''
+	echo $1
+	IFS=$_ifs
+}
+
+##
+# Commands
+##
+cmd_grademe()
+{
+	read -ep "Are you sure you want to be graded ? [yN]" response
+	eprint
+
+	case $response
+	in
+		""|"n"|"N") return ;;
+	esac
+
+	if	bash test.sh
 	then
-		cd - >/dev/null
 		echo "$(tput setaf 2)>>>>>SUCCESS<<<<<$(tput sgr 0)"
+		_test_success=1
 		return 0
 	else
-		cd - >/dev/null
 		echo "$(tput setaf 1)>>>>>FAILURE<<<<<$(tput sgr 0)"
 		return 1
 	fi
 }
 
-exam_start()
+cmd_status()
 {
-	local start_human=$(date +"%c");
-	local start_timestamp=$(date +"%s");
-	local exam_tests=()
+	local now=$(date +"%s")
+	local elapsed=$(( ($now - $_start) ))
+	local elapsed_human="$(( elapsed / 3600 ))h $(( (elapsed / 60) % 60 ))m $(( elapsed % 60 ))s"
+	local elapsed_test=$(( ($now - $_test_start) ))
+	local elapsed_test_human="$(( elapsed_test / 3600 ))h $(( (elapsed_test / 60) % 60 ))m $(( elapsed_test % 60 ))s"
 
-	echo "You're all set !"
-	echo "The exam will start after all this... hopefully"
-	echo "$(tput smul)Remember:$(tput rmul)"
-	echo "    $(tput setaf 2)work/$(tput sgr 0)"
-	echo "        you put your files there"
-	echo "    $(tput setaf 2)grademe$(tput sgr 0)"
-	echo "        is just pure adrenaline rush"
-	echo "    $(tput setaf 2)help$(tput sgr 0)"
-	echo "        in case you're drunk or new around here"
-	echo "    $(tput setaf 2)TESTNAME/compile.sh$(tput sgr 0)"
-	echo "    $(tput setaf 2)TESTNAME/test.sh$(tput sgr 0)"
-	echo "        can be triggered manually for debugging purposes and could be useful"
-	echo
-	echo "Take a deep breath and..."
-	exam_enter_to_continue
-	echo "================================================="
-	echo "$(tput setaf 244)Exam started $start_human$(tput sgr 0)"
+	eprint_kv "level" "$_level" "test" "$_test" "folder" "work/$_test" "total time" "$elapsed_human" "test time" "$elapsed_test_human"
+	eprint
+}
 
-	for level in 0 1
-	do
-		case $level
-		in
-			0) exam_tests=($(shuf -e "${TESTS_0[@]}")) ;;
-			1) exam_tests=($(shuf -e "${TESTS_1[@]}")) ;;
-			*)
-				echo "$level is in invalid level"
-				return 1;
-				;;
-		esac
-		for i in ${!exam_tests[@]}
-		do
-			local test_name=${exam_tests[i]};
-			local test_start_timestamp=$(date +"%s");
+cmd_skip()
+{
+	read -ep "Are you sure you want to skip this test ? [Yn]" response
+	eprint
 
-			exam_print_current_test $level $test_name
-			echo
-			while [ 42 -eq 42 ]
-			do
-				read -p "$(tput setaf 244)exam-trainer$(tput sgr 0)> " user_cmd
-				if [ -z $user_cmd ]
-				then
-					continue
-				elif [ $user_cmd = "quit" ] ||  [ $user_cmd = "q" ]
-				then
-					return 1
-				elif [ $user_cmd = "skip" ]  ||  [ $user_cmd = "sk" ]
-				then
-					read -p "Are you sure you want to skip $test_name ? [yN]" answer
+	case $response
+	in
+		""|"y"|"Y") _test_success=1	;;
+	esac
+}
 
-					if [ -z $answer ] || [ $answer = "n" ] || [ $answer = "N" ]
-					then
-						continue
-					elif [ $answer = "y" ] || [ $answer = "Y" ]
-					then
-						break
-					fi
-				elif [ $user_cmd = "help" ]  ||  [ $user_cmd = "h" ]
-				then
-					exam_print_help
-				elif [ $user_cmd = "status" ]  ||  [ $user_cmd = "s" ]
-				then
-					echo "status:"
-					exam_print_current_test $level $test_name | sed -e "s/.*/    &/"
-					exam_print_status $(date +"%s") $start_timestamp $test_start_timestamp  | sed -e "s/.*/    &/"
-				elif [ $user_cmd = "grademe" ]  ||  [ $user_cmd = "g" ]
-				then
-					read -p "Are you sure you want to be graded ? [yN]" answer
-					echo
+cmd_quit()
+{
+	read -ep "Are you sure you want to quit ? [Yn]" response
+	eprint
 
-					if [ -z $answer ] || [ $answer = "n" ]  || [ $answer = "N" ]
-					then
-						continue
-					elif [ $answer = "y" ]  || [ $answer = "Y" ]
-					then
-						echo "$(tput setaf 244)testing $test_name (it may take a while)...$(tput sgr 0)"
-						if test_exo $test_name
-						then
-							total_time_elapsed=$(($(date +"%s") - $test_start_timestamp));
-							exam_print_elapsed_time "finished in " $total_time_elapsed
-							break
-						fi
-					else
-						continue
-					fi
-				else
-					echo "Unknown command"
-					echo "Type help if you're lost"
-				fi
-			done
-		done
-	done
-	total_time_elapsed=$(($(date +"%s") - $start_timestamp));
-	exam_print_elapsed_time "total time  " $total_time_elapsed
+	case $response
+	in
+		""|"y"|"Y") _force_quit=1 ;;
+	esac
+}
+
+cmd_help()
+{
+	eprint "available commands:"
+	eprint_indent++
+	eprint_kv "grademe, g" "runs all tests, try to move to next level" \
+		"status, s" "prints current level infos, and timers" \
+		"skip, sk" "skips to next test" \
+		"quit, q" "quits the program" \
+		"help, h" "prints this" \
+		"compile, c" "compile files for the current test" \
+		"test, t [n]" "launch tests, you can specify a number to run said test"
+	eprint_indent--
+	eprint
+}
+
+cmd_compile()
+{
+	bash compile.sh
+}
+
+cmd_test()
+{
+	bash test.sh
+}
+
+cmd_clean()
+{
+	bash clean.sh
+}
+
+##
+# Main Loop
+##
+eprompt()
+{
+	read -ep "$(tput setaf 244)exam-trainer$(tput sgr 0)> " user_cmd
+
+	case $user_cmd in
+		"") return 0;;
+		"grademe"|"g") cmd_grademe;;
+		"status"|"s") cmd_status ;;
+		"skip"|"sk") cmd_skip ;;
+		"quit"|"q") cmd_quit ;;
+		"help"|"h") cmd_help ;;
+		"compile"|"c") cmd_compile ;;
+		"test"|"t") cmd_test ;;
+		"clean"|"cl") cmd_clean ;;
+		*)
+			eprint "Unknown command"
+			eprint_1 "type $(tput setaf 244)help$(tput sgr 0) to get a list of available commands"
+		;;
+	esac
 }
 
 exam()
 {
-	echo "$(tput smul)Exam Trainer by Rakjlou$(tput rmul) (v$VERSION)"
-	echo
+	_start=$(date +"%s")
+	local start_human=`date +"%c" -ud @$_start`
 
-	if exam_confirm
-	then
-		echo
-		exam_setup
-		exam_start
-	fi
-	echo "Exam left"
+	eprint "$(tput setaf 244)Exam started $start_human$(tput sgr 0)"
+
+	while [ ! -z $1 ]
+	do
+		# Get level tests count
+		local tests_count=$1
+		shift
+
+		# Retrieving and shuffling tests
+		local args=("$@")
+		local tests=($(shuf -e ${args[@]:0:$tests_count}))
+		shift $tests_count
+
+		# Doing tests
+		_test_success=0
+		for i in ${!tests[@]}
+		do
+			if [ $_force_quit -ne 0 ]; then continue;
+			elif [[ $_test_success -ne 0 ]] && [[ $_mode = "exam" ]]; then continue;
+			fi
+
+			_test_success=0
+			_test_start=$(date +"%s")
+			_test=${tests[$i]}
+
+			eprint_test
+			eprint
+			cd $_test
+			while [ $_test_success -eq 0 ] && [ $_force_quit -eq 0 ]
+			do
+				eprompt
+			done
+			cd -
+		done
+
+		_level=$(($_level + 1))
+	done
+
 }
 
-exam
+start_message()
+{
+	eprint "================================================="
+	eprint "You're all set !"
+	eprint_1 "$_exam will start after all this... hopefully"
+	eprint
+	eprint "$(tput smul)Remember:$(tput rmul)"
+	eprint_1	"$(tput setaf 2)work/$(tput sgr 0)"
+	eprint_2		"you put your files there"
+	eprint_1	"$(tput setaf 2)grademe$(tput sgr 0)"
+	eprint_2		"is just pure adrenaline rush"
+	eprint_1	"$(tput setaf 2)help$(tput sgr 0)"
+	eprint_2	"in case you're drunk or new around here"
+	eprint_1	"$(tput setaf 2)compile$(tput sgr 0)"
+	eprint_1	"$(tput setaf 2)test$(tput sgr 0)"
+	eprint_2		"can be used manually"
+	eprint
+	eprint "Don't panic ! Take a deep breath and..."
+	enter_to_continue
+	eprint "================================================="
+}
+
+start()
+{
+	case $_exam
+	in
+		"exam02") exam 2 "union" "inter" 2 "ft_printf" "get_next_line" ;;
+		*)
+			echo "$_exam is an invalid exam"
+			return 1;
+			;;
+	esac
+}
+
+
+eprint "$(tput smul)$_program$(tput rmul) by $_author - v$_version"
+eprint
+
+if confirm
+then
+	setup
+	start_message
+	start
+fi
+
+eprint "Exit exam."
