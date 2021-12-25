@@ -1,0 +1,4 @@
+Assignment name  : ft_printf
+Expected files   : ft_printf.c
+Allowed functions: malloc free
+--------------------------------------------------------------------------------
