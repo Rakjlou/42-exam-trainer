@@ -355,9 +355,18 @@ cmd_help()
 		"quit, q" "quits the program" \
 		"help, h" "prints this" \
 		"compile, c" "compile files for the current test" \
-		"test, t [n]" "launch tests, you can specify a number to run said test"
+		"test, t [n]" "launch tests, you can specify a number to run said test" \
+		"clean, cl" "clean the test subfolder" \
+		"subject, sub" "prints the subject"
 	eprint_indent--
 	eprint
+}
+
+cmd_subject()
+{
+	IFS=$''
+	eprint_tput 6 `cat subject.txt`
+	IFS=$_ifs
 }
 
 cmd_compile()
@@ -392,6 +401,7 @@ eprompt()
 		"compile"|"c") cmd_compile ;;
 		"test"|"t") cmd_test ;;
 		"clean"|"cl") cmd_clean ;;
+		"subject"|"sub") cmd_subject ;;
 		*)
 			eprint "Unknown command"
 			eprint_1 "type $(tput setaf 244)help$(tput sgr 0) to get a list of available commands"

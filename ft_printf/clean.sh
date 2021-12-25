@@ -8,4 +8,5 @@ find .\
 	! -name "clean.sh" \
 	! -name "gnl.c" \
 	! -name "." \
+	! -name "subject.txt" \
 	-exec rm -f {} +
