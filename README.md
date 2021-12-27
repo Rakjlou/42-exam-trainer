@@ -22,7 +22,6 @@ Now don't say `LET'S GO !!` to anyone, and you should be good.
 - Extensive error details (compilation errors, runtime, diffs, leaks)
 - Simple tests, just like during the exams
 - Easily recompile and rerun tests outside the trainer
-- Checking leaks
 - Easy to tweak
 - Passive aggressive humor
 
