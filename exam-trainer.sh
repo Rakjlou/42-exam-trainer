@@ -3,7 +3,7 @@
 ##
 # Globals
 ##
-_version="0.6"
+_version="1.0"
 _program="Exam Trainer"
 _author="rakjlou"
 
@@ -302,7 +302,7 @@ cmd_grademe()
 
 	if	bash test.sh
 	then
-		echo "$(tput setaf 2)>>>>>SUCCESS<<<<<$(tput sgr 0)"
+		echo "$(tput setaf 2)>>>>>LET'S GOOOOO<<<<<$(tput sgr 0)"
 		_test_success=1
 		return 0
 	else

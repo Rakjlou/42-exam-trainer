@@ -20,10 +20,8 @@ int	ft_printf(const char *format, ...)
 
 int	main()
 {
-	char	*str = "Hello, %s %s %c %c %d %d %d %d %d %x %x %x %x %x\n";
+	char	*str = "Hello, %s %s %d %d %d %d %d %x %x %x %x %x\n";
 	char	*arg1 = "World!";
-	char	arg2 = '4';
-	char	arg3 = '2';
 	int		arg4 = 42;
 	int		arg5 = -42;
 	int		arg6 = 0;
@@ -35,8 +33,6 @@ int	main()
 		str,
 		arg1,
 		NULL,
-		arg2,
-		arg3,
 		arg4,
 		arg5,
 		arg6,
