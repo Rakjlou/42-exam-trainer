@@ -1,7 +1,7 @@
 # 42-exam-trainer
 A quick and easy program to train 42 exams.
 Only exam 02 is supported for now.
-Currently WIP.
+
 ## Install
 - Dependencies:  `gcc` and `valgrind`
 - Setup: just clone the repository where you want
@@ -15,6 +15,7 @@ Now don't say `LET'S GO !!` to anyone, and you should be good.
 - Freely inspired by `examshell`
 	- `grademe` runs tests
 	- `status` prints the time spent overall and on the current test
+	- `subject` prints the subject
 	- `skip` ignores current test
 	- `help` prints all available commands
 	- `quit` quits the exam
@@ -28,10 +29,6 @@ Now don't say `LET'S GO !!` to anyone, and you should be good.
 ### Upcoming features
 - Finally determining `bash`'s minimum required version 
 - Allowing to test a specific test
-- Adding level 1 tests (`inter` and `union`)
-- Adding tests subjects
-- Exam mode, where only one test is chosen by level
-- Allowing to chose only one test to pass
 - History
 - Keeping high time score records
 - A mode where I shut up
