@@ -355,7 +355,7 @@ cmd_help()
 		"quit, q" "quits the program" \
 		"help, h" "prints this" \
 		"compile, c" "compile files for the current test" \
-		"test, t [n]" "launch tests, you can specify a number to run said test" \
+		"test, t" "launch tests" \
 		"clean, cl" "clean the test subfolder" \
 		"subject, sub" "prints the subject"
 	eprint_indent--
