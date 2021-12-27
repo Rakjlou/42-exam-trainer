@@ -7,7 +7,7 @@ Only exam 02 is supported for now.
 - Setup: just clone the repository where you want
 ## Usage
 ```bash
-./exam-trainer.sh
+bash exam-trainer.sh
 ```
 Now don't say `LET'S GO !!` to anyone, and you should be good.
 
