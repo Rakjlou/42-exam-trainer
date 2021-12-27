@@ -1,34 +1,40 @@
 #!/bin/bash
-print_test_summary()
-{
-	echo "    $(tput setaf 244)file $(tput sgr 0)$2 $(tput setaf 244)buffer_size $(tput sgr 0)$1"
-}
+_test_count=0
 
 test_get_next_line()
 {
+	local test_name="test_$_test_count"
+	local test_file="$test_name.test"
+	local ref_file="$test_name.ref"
+	local error_file="$test_name.error"
+	local diff_file="$test_name.diff"
+
 	bash compile.sh $1 || return 1
-	valgrind ./a.out < $2 > "$2.$1.test" 2> "$2.$1.valgrind"
-	cat $2 | sed -e "s/.*/>>>&/" > "$2.$1.ref"
-	diff "$2.$1.ref" "$2.$1.test" > "$2.$1.diff"
-	if	[ $? -eq 0 ]
+
+	echo -n "$(tput setaf 244)#$_test_count test $(tput sgr 0)"
+	_test_count=$(( (_test_count + 1) ))
+
+	valgrind --leak-check=full ./a.out < $2 > "$test_file" 2> "$error_file"
+	cat $2 | sed -e "s/.*/>>>&/" > "$ref_file"
+	if	diff --unified=0 "$ref_file" "$test_file" > "$diff_file"
 	then
-		leaks_check=$(cat "$2.$1.valgrind" | grep "no leaks are possible" | wc -l)
+		leaks_check=$(cat $error_file | grep "no leaks are possible" | wc -l)
 
 		if [ $leaks_check -gt 0 ]
 		then
+			echo "$(tput setaf 2)OK$(tput sgr 0)"
 			bash clean.sh
 			return 0
 		else
-			print_test_summary $1 $2
-			cat "$2.$1.valgrind"
+			echo "$(tput setaf 1)LEAKS$(tput sgr 0) with BUFFER_SIZE $1 and file $2"
+			cat $error_file
 			return 1
 		fi
 	else
-		print_test_summary $1 $2
-		cat "$2.$1.diff"
+		echo "$(tput setaf 1)FAIL$(tput sgr 0)  with BUFFER_SIZE $1 and file $2"
+		cat $diff_file
 		return 1
 	fi
-	rm -f test
 }
 
 test_get_next_line 1 main.c &&

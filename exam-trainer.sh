@@ -446,12 +446,16 @@ exam()
 			do
 				eprompt
 			done
-			cd -
+			local elapsed_test=$(( $(date +"%s") - $_test_start ))
+			local elapsed_human="$(( elapsed_test / 3600 ))h $(( (elapsed_test / 60) % 60 ))m $(( elapsed_test % 60 ))s"
+
+			_tests_passed+=("$_test: $elapsed_human")
+			eprint "$(tput setaf 244)You completed $_test in$(tput sgr 0) $elapsed_human !"
+			cd - >/dev/null
 		done
 
 		_level=$(($_level + 1))
 	done
-
 }
 
 start_message()
@@ -465,6 +469,8 @@ start_message()
 	eprint_2		"you put your files there"
 	eprint_1	"$(tput setaf 2)grademe$(tput sgr 0)"
 	eprint_2		"is just pure adrenaline rush"
+	eprint_1	"$(tput setaf 2)subject$(tput sgr 0)"
+	eprint_2		"in order to print the subject"
 	eprint_1	"$(tput setaf 2)help$(tput sgr 0)"
 	eprint_2	"in case you're drunk or new around here"
 	eprint_1	"$(tput setaf 2)compile$(tput sgr 0)"
